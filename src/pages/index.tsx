@@ -1,7 +1,7 @@
 import { ShopLayout } from '@/components/layouts';
 import { ProductList } from '@/components/products';
 import { Typography } from '@mui/material';
-import { initialData } from '../../database/products';
+import { initialData } from '../database/products';
 
 
 const index = () => {
