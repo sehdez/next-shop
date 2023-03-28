@@ -1,7 +1,7 @@
 import { ShopLayout } from "@/components/layouts"
 import { ProductSlideShow, SizeSelector } from "@/components/products";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
-import { initialData } from "../../../database/products"
+import { initialData } from "../../database/products"
 import 'react-slideshow-image/dist/styles.css'
 import { ItemCounter } from "@/components/ui";
 

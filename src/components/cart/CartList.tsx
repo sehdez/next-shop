@@ -1,6 +1,6 @@
 import NextLink from 'next/link'
 import { FC } from 'react'
-import { initialData } from '../../../database/products';
+import { initialData } from '../../database/products';
 import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material';
 import { ItemCounter } from '../ui/ItemCounter';
 
