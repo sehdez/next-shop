@@ -25,3 +25,14 @@ services:
     ports:
       - 8000:8081
     restart: always
+  # node:
+  #   container_name: Node-18
+  #   depends_on:
+  #     - db
+  #   image: node:18.15.0-alpine3.17
+  #   volumes:
+  #     - ./:/app
+  #   ports:
+  #     - 3000:3000
+  #   working_dir: /app
+  #   command: npm start

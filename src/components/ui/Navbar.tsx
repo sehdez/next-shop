@@ -4,10 +4,12 @@ import { useContext, useState } from 'react';
 import { UiContext } from '@/context';
 import { AppBar, Badge, Box, Button, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material'
 import { ClearOutlined, SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material'
+import { CartContext } from '../../context/cart/CartContext';
 
 export const Navbar = () => {
     const { pathname } = useRouter();
     const { toggleSideMenu } = useContext(UiContext)
+    const { cart } = useContext(CartContext)
 
     const [searchTerm, setSearchTerm] = useState('');
     const [isSearchVisible, setIsSearchVisible] = useState(false)
@@ -100,10 +102,10 @@ export const Navbar = () => {
                     <SearchOutlined />
                 </IconButton>
 
-                <NextLink href='/cart' passHref legacyBehavior>
+                <NextLink href={cart.length > 0 ? '/cart' : '/cart/empty'} passHref legacyBehavior>
                     <Link>
                         <IconButton>
-                            <Badge badgeContent={2} color='secondary'>
+                            <Badge badgeContent={cart.length < 9 ? cart.length : '+9'} color='secondary'>
                                 <ShoppingCartOutlined />
                             </Badge>
                         </IconButton>

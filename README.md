@@ -8,4 +8,5 @@
 - ### [React Hook Form](https://react-hook-form.com/)
 - ### [Data Grid](https://mui.com/x/react-data-grid/getting-started/#main-content)
 - ### [Mongoose](https://www.npmjs.com/package/mongoose)
-
+- ### [SRW](https://swr.vercel.app/es-ES)
+- ### [JavaScript Cookie](https://www.npmjs.com/package/js-cookie)
