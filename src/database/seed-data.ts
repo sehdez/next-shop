@@ -1,24 +1,33 @@
+import bcrypt from 'bcryptjs'
+
+
 interface SeedProduct {
-    description: string;
-    images: string[];
-    inStock: number;
-    price: number;
-    sizes: ValidSizes[];
-    slug: string;
-    tags: string[];
-    title: string;
-    type: ValidTypes;
-    gender: 'men' | 'women' | 'kid' | 'unisex'
+    description : string;
+    images      : string[];
+    inStock     : number;
+    price       : number;
+    sizes       : ValidSizes[];
+    tags        : string[];
+    slug        : string;
+    title       : string;
+    type        : ValidTypes;
+    gender      : 'men' | 'women' | 'kid' | 'unisex'
+}
+
+interface SeedUser {
+    name     : string;
+    email    : string;
+    password : string;
+    role     : 'admin' | 'client'
 }
 
 type ValidSizes = 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'XXXL';
 type ValidTypes = 'shirts' | 'pants' | 'hoodies' | 'hats';
 
 interface SeedData {
-    products: SeedProduct[],
+    products : SeedProduct[],
+    users    : SeedUser[],
 }
-
-
 
 
 export const initialData: SeedData = {
@@ -805,5 +814,19 @@ export const initialData: SeedData = {
             title: "Kids Corp Jacket",
             gender: 'kid'
         },
+    ],
+    users: [
+        {
+            name: 'Sergio Hernández',
+            email: 'sergio@gmail.com',
+            password: bcrypt.hashSync('123456'),
+            role: 'admin'
+        },
+        {
+            name: 'Francisco Cuevas',
+            email: 'francisco@gmail.com',
+            password: bcrypt.hashSync('123456'),
+            role: 'client'
+        }
     ]
 }
