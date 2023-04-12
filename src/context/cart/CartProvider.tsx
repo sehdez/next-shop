@@ -27,8 +27,6 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     useEffect(() => {
         const cartInCookie = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [];
         try {
-            console.log(cartInCookie)
-            if (cartInCookie.length > 0)
                 dispatch({ type: '[CART] - LoadCart from cookies | storage', payload: cartInCookie })
 
         } catch {
@@ -38,7 +36,6 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
 
     useEffect(() => {
-        console.log(state.cart)
         Cookie.set('cart', JSON.stringify(state.cart))
     }, [state.cart])
 

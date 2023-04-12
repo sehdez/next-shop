@@ -33,14 +33,14 @@ export const connect = async () => {
     await mongoose.connect(urlDB || '', { dbName });
 
     mongoConnection.isConnected = 1;
-    console.log('Conectado a Mongo', urlDB);
+    console.log('Conectado a Mongo', dbName);
 }
 
 
 export const disconnect = async () => {
 
     // return
-    // if (process.env.NODE_ENV === 'development') return;
+    if (process.env.NODE_ENV === 'development') return;
 
     if (mongoConnection.isConnected === 0) return;
 

@@ -10,3 +10,5 @@
 - ### [Mongoose](https://www.npmjs.com/package/mongoose)
 - ### [SRW](https://swr.vercel.app/es-ES)
 - ### [JavaScript Cookie](https://www.npmjs.com/package/js-cookie)
+- ### [Node bcryptjs](https://www.npmjs.com/package/bcrypt)
+- ### [Jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
