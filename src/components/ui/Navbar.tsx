@@ -102,10 +102,10 @@ export const Navbar = () => {
                     <SearchOutlined />
                 </IconButton>
 
-                <NextLink href={cart.length > 0 ? '/cart' : '/cart/empty'} passHref legacyBehavior>
+                <NextLink href={cart?.length > 0 ? '/cart' : '/cart/empty'} passHref legacyBehavior>
                     <Link>
                         <IconButton>
-                            <Badge badgeContent={cart.length < 9 ? cart.length : '+9'} color='secondary'>
+                            <Badge badgeContent={cart?.length < 9 ? cart?.length : '+9'} color='secondary'>
                                 <ShoppingCartOutlined />
                             </Badge>
                         </IconButton>

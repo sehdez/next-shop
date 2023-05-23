@@ -1,11 +1,11 @@
+import { useRouter } from 'next/router';
 import { FC, useReducer, PropsWithChildren, useEffect } from 'react';
-import Cookie from 'js-cookie'
-
-import { AuthContext, authReducer } from './';
-import { IUser } from '../../interfaces/user';
-import { shopApi } from '@/api';
-import Cookies from 'js-cookie';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
+import { IUser } from '../../interfaces/user';
+import { AuthContext, authReducer } from './';
+import { shopApi } from '@/api';
 
 export interface AuthState {
     isLoggedIn: boolean;
@@ -20,7 +20,7 @@ const AUTH_INITIAL_STATE: AuthState = {
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
-    
+    const router = useRouter();
 
     const loginUser = async ( email:string, password: string ): Promise<boolean> => {
 
@@ -60,6 +60,12 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         }
     }
 
+    const logout = () => {
+        Cookies.remove('token');
+        Cookies.remove('cart');
+        router.reload();
+    }
+
     const validateToken = async () => {
         const token = Cookies.get('token')
         if(!token) return;
@@ -82,7 +88,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
             //Metods
             loginUser,
-            registerUser
+            registerUser,
+            logout
         }}
         >
             {children}

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useContext, useState } from 'react'
-import { UiContext } from '@/context'
+import { AuthContext, UiContext } from '@/context'
 
 import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material'
 import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from '@mui/icons-material'
@@ -9,6 +9,8 @@ import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, Confirmati
 export const SideMenu = () => {
     const { isMenuOpen, toggleSideMenu } = useContext(UiContext)
     const [searchTerm, setSearchTerm] = useState('');
+
+    const { isLoggedIn, user, logout } = useContext(AuthContext)
 
     const router = useRouter()
 
@@ -23,6 +25,9 @@ export const SideMenu = () => {
         router.push(url)
         toggleSideMenu();
     }
+
+
+
     return (
         <Drawer
             open={isMenuOpen}
@@ -54,6 +59,7 @@ export const SideMenu = () => {
 
                     <ListItem button
                         onClick={() => navigateTo('/')}
+                        sx={{ display: isLoggedIn ? 'flex' : 'none' }}
                     >
                         <ListItemIcon>
                             <AccountCircleOutlined />
@@ -62,6 +68,7 @@ export const SideMenu = () => {
                     </ListItem>
 
                     <ListItem button
+                        sx={{ display: isLoggedIn ? 'flex' : 'none' }}
                         onClick={() => navigateTo('/')}
                     >
                         <ListItemIcon>
@@ -103,7 +110,8 @@ export const SideMenu = () => {
 
 
                     <ListItem button
-                        onClick={() => navigateTo('/')}
+                        onClick={() => navigateTo(`/auth/login?p=${ router.asPath }`)}
+                        sx={{ display: isLoggedIn ? 'none' : 'flex' }}
                     >
                         <ListItemIcon>
                             <VpnKeyOutlined />
@@ -112,7 +120,8 @@ export const SideMenu = () => {
                     </ListItem>
 
                     <ListItem button
-                        onClick={() => navigateTo('/')}
+                        onClick={logout}
+                        sx={{ display: isLoggedIn ? 'flex' : 'none' }}
                     >
                         <ListItemIcon>
                             <LoginOutlined />
@@ -122,34 +131,36 @@ export const SideMenu = () => {
 
 
                     {/* Admin */}
-                    <Divider />
-                    <ListSubheader>Admin Panel</ListSubheader>
+                    <Box sx={{ display: user?.role === 'admin' ? 'block' : 'none' }} >
+                        <Divider />
+                        <ListSubheader>Admin Panel</ListSubheader>
 
-                    <ListItem button
-                        onClick={() => navigateTo('/')}
-                    >
-                        <ListItemIcon>
-                            <CategoryOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary={'Productos'} />
-                    </ListItem>
-                    <ListItem button
-                        onClick={() => navigateTo('/')}
-                    >
-                        <ListItemIcon>
-                            <ConfirmationNumberOutlined />
-                        </ListItemIcon>
-                        <ListItemText primary={'Ordenes'} />
-                    </ListItem>
+                        <ListItem button
+                            onClick={() => navigateTo('/')}
+                        >
+                            <ListItemIcon>
+                                <CategoryOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary={'Productos'} />
+                        </ListItem>
+                        <ListItem button
+                            onClick={() => navigateTo('/')}
+                        >
+                            <ListItemIcon>
+                                <ConfirmationNumberOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary={'Ordenes'} />
+                        </ListItem>
 
-                    <ListItem button
-                        onClick={() => navigateTo('/')}
-                    >
-                        <ListItemIcon>
-                            <AdminPanelSettings />
-                        </ListItemIcon>
-                        <ListItemText primary={'Usuarios'} />
-                    </ListItem>
+                        <ListItem button
+                            onClick={() => navigateTo('/')}
+                        >
+                            <ListItemIcon>
+                                <AdminPanelSettings />
+                            </ListItemIcon>
+                            <ListItemText primary={'Usuarios'} />
+                        </ListItem>
+                    </Box>
                 </List>
             </Box>
         </Drawer>

@@ -5,19 +5,34 @@ import { ICartProduct } from '@/interfaces';
 import { CartContext, cartReducer } from './';
 
 export interface CartState {
-    cart: ICartProduct[];
-    numberOfItems: number;
-    subtotal: number;
-    taxRate: number;
-    total: number;
+    isLoaded         : boolean;
+    cart             : ICartProduct[];
+    numberOfItems    : number;
+    subtotal         : number;
+    taxRate          : number;
+    total            : number;
+    shippingAddress? : ShippingAddress,
+}
+export interface ShippingAddress {
+    firstName : string;
+    lastName  : string;
+    address   : string;
+    address2? : string;
+    zipCode   : string;
+    city      : string;
+    country   : string;
+    phone     : string;
+
 }
 
 const CART_INITIAL_STATE: CartState = {
-    cart: [],
-    numberOfItems: 0,
-    subtotal: 0,
-    taxRate: 0,
-    total: 0
+    isLoaded        : false,
+    cart            : [],
+    numberOfItems   : 0,
+    subtotal        : 0,
+    taxRate         : 0,
+    total           : 0,
+    shippingAddress : undefined,
 }
 
 export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
@@ -25,18 +40,25 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
 
     useEffect(() => {
-        const cartInCookie = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [];
-        try {
-                dispatch({ type: '[CART] - LoadCart from cookies | storage', payload: cartInCookie })
-
-        } catch {
-            dispatch({ type: '[CART] - LoadCart from cookies | storage', payload: [] })
+        if (Cookie.get('firstName')){
+            const shippingAddress = {
+                firstName : Cookie.get('firstName') ||'',
+                lastName  : Cookie.get('lastName')  ||'',
+                address   : Cookie.get('address')   ||'',
+                address2  : Cookie.get('address2')  ||'',
+                zipCode   : Cookie.get('zipCode')   ||'',
+                city      : Cookie.get('city')      ||'',
+                country   : Cookie.get('country')   ||'',
+                phone     : Cookie.get('phone')     ||''
+            }
+            dispatch({ type: '[CART] - LoadAddress from cookies | storage', payload: shippingAddress })
         }
     }, [])
 
 
     useEffect(() => {
-        Cookie.set('cart', JSON.stringify(state.cart))
+        if (state.isLoaded)
+            Cookie.set('cart', JSON.stringify(state.cart))
     }, [state.cart])
 
 
@@ -55,6 +77,18 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
     }, [state.cart])
 
+    useEffect(() => {
+        const cartInCookie: ICartProduct[] = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : [];
+        const numberOfItems = cartInCookie.reduce((prev, current) => current.quantity + prev, 0)
+        try {
+            dispatch({ type: '[CART] - LoadCart from cookies | storage', payload: { cart: cartInCookie, numberOfItems } })
+
+        } catch (error) {
+
+            console.log(error);
+            dispatch({ type: '[CART] - LoadCart from cookies | storage', payload: {cart:[], numberOfItems:0} })
+        }
+    }, [])
 
 
     const addProductToCart = (newProduct: ICartProduct) => {
@@ -87,13 +121,25 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: '[CART] - Updated quantity in cart', payload: product })
     }
 
+    const updateAddress = ( address: ShippingAddress ) => {
+        Cookie.set('firstName', address.firstName);
+        Cookie.set('lastName', address.lastName);
+        Cookie.set('address', address.address);
+        Cookie.set('address2', address.address2 || '');
+        Cookie.set('zipCode', address.zipCode);
+        Cookie.set('city', address.city);
+        Cookie.set('country', address.country);
+        Cookie.set('phone', address.phone);
+        dispatch({ type: '[CART] - Update ShipingAddress', payload: address })
+    }
 
     return (
         <CartContext.Provider value={{
             ...state,
             addProductToCart,
             updateCartQuantity,
-            removeProductInCart
+            removeProductInCart,
+            updateAddress
         }}
         >
             {children}

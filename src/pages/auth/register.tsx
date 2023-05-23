@@ -35,7 +35,9 @@ const RegisterPage = () => {
             return
         }
         setIsLoading(false)
-        router.replace('/')
+        
+        const destination = router.query?.p?.toString() || '/';
+        router.replace(destination);
     }
 
     return (
@@ -115,7 +117,7 @@ const RegisterPage = () => {
                         </Grid>
 
                         <Grid item xs={12} justifyContent='end' display='flex'>
-                            <NextLink href='/auth/login' passHref legacyBehavior>
+                            <NextLink href={`${router.query.p ? `/auth/login?p=${router.query.p}` : '/auth/login' }`} passHref legacyBehavior>
                                 <Link underline='always'>
                                     ¿Ya tienes una cuenta?
                                 </Link>
