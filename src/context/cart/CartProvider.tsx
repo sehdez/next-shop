@@ -1,8 +1,10 @@
 import { FC, useReducer, PropsWithChildren, useEffect } from 'react';
 import Cookie from 'js-cookie'
 
-import { ICartProduct } from '@/interfaces';
+import { ICartProduct, ShippingAddress } from '@/interfaces';
 import { CartContext, cartReducer } from './';
+import { shopApi } from '@/api';
+import { IOrder, IOrderItem } from '../../interfaces/order';
 
 export interface CartState {
     isLoaded         : boolean;
@@ -12,17 +14,6 @@ export interface CartState {
     taxRate          : number;
     total            : number;
     shippingAddress? : ShippingAddress,
-}
-export interface ShippingAddress {
-    firstName : string;
-    lastName  : string;
-    address   : string;
-    address2? : string;
-    zipCode   : string;
-    city      : string;
-    country   : string;
-    phone     : string;
-
 }
 
 const CART_INITIAL_STATE: CartState = {
@@ -133,13 +124,40 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: '[CART] - Update ShipingAddress', payload: address })
     }
 
+    const createOrder = async ()=> {
+
+        if( !state.shippingAddress ) {
+            throw new Error('No hay dirección de entrega');
+        }
+        const body: IOrder = {
+            orderItems: state.cart as IOrderItem[],
+            shippingAddress: state.shippingAddress,
+            numberOfItems  : state.numberOfItems,
+            subtotal       : state.subtotal,
+            taxRate        : state.taxRate,
+            total          : state.total,
+            isPaid         : false,
+        }
+
+        try {
+            const { data } = await shopApi.post('/orders', body)
+
+            console.log({data})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <CartContext.Provider value={{
             ...state,
             addProductToCart,
             updateCartQuantity,
             removeProductInCart,
-            updateAddress
+            updateAddress,
+
+            // Ordenes
+            createOrder
         }}
         >
             {children}

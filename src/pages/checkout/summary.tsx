@@ -10,8 +10,10 @@ import { CartContext } from '@/context';
 import { countries } from '@/utils';
 
 const SummaryPage = () => {
-    const { shippingAddress, numberOfItems } = useContext( CartContext )
+    const { shippingAddress, numberOfItems, createOrder } = useContext( CartContext )
     const router = useRouter()
+
+
     useEffect( ()=> {
         if ( !Cookies.get('firstName') ) {
             router.push('/checkout/address')
@@ -23,14 +25,11 @@ const SummaryPage = () => {
         return <></>
     }
 
-    const { firstName,
-            lastName,
-            address,
-            address2 = '',
-            city,
-            zipCode,
-            country,
-            phone } = shippingAddress;
+    const { firstName, lastName, address, address2 = '', city, zipCode, country, phone } = shippingAddress;
+
+    const onCreateOrder = async () => {
+        await createOrder()
+    }
 
     return (
         <ShopLayout title='Resumen de orden' pageDescription={'Resumen de la órden'}>
@@ -69,7 +68,12 @@ const SummaryPage = () => {
                             <OrderSummary />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button color='secondary' className='circular-btn' fullWidth>
+                                <Button 
+                                    color='secondary' 
+                                    className='circular-btn' 
+                                    fullWidth
+                                    onClick={onCreateOrder}
+                                >
                                     Confirmar orden
                                 </Button>
                             </Box>
