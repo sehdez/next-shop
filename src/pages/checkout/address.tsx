@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { Box, Button, FormControl, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
@@ -34,13 +34,24 @@ const getAddressFromCookies = (): FormData => {
 const AddressPage = () => {
     const router = useRouter();
     const { updateAddress } = useContext(CartContext)
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+
+    const [defaultCountry, setDefaultCountry] = useState('')
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         defaultValues: getAddressFromCookies()
     });
     const onSubmit = ( data: FormData ) => {
         updateAddress(data)
         router.push('/checkout/summary')
     }
+
+    // getAddressFromCookies() retorna el valor guadado en las cookies
+    useEffect(() => {
+        const address = getAddressFromCookies()
+        reset(address)
+        setDefaultCountry(address.country)
+    }, [reset])
+
     return (
         <ShopLayout title='Dirección' pageDescription='Confirmar dirección del destino'>
             <form onSubmit={ handleSubmit(onSubmit) }>
@@ -147,7 +158,8 @@ const AddressPage = () => {
                                 select
                                 variant='filled'
                                 label='País'
-                                defaultValue={countries.find(el => el.code === Cookies.get('country') || '')?.code  || countries[0].code }
+                                key={defaultCountry}
+                                defaultValue={ defaultCountry }
                                 {
                                 ...register('country', {
                                     required: 'Este campo es requerido',
