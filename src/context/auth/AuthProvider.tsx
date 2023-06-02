@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useSession, signOut } from 'next-auth/react';
 import { FC, useReducer, PropsWithChildren, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -21,6 +22,8 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
     const router = useRouter();
+
+    const { data, status } = useSession();
 
     const loginUser = async ( email:string, password: string ): Promise<boolean> => {
 
@@ -60,10 +63,21 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         }
     }
 
-    const logout = () => {
-        Cookies.remove('token');
+    const logout = async() => {
         Cookies.remove('cart');
-        router.reload();
+        
+        //Remover la info del domicilio del cliente
+        Cookies.remove('firstName');
+        Cookies.remove('lastName');
+        Cookies.remove('address');
+        Cookies.remove('address2');
+        Cookies.remove('zipCode');
+        Cookies.remove('city');
+        Cookies.remove('country');
+        Cookies.remove('phone');
+        signOut();
+        // Cookies.remove('token');
+        // router.reload();
     }
 
     const validateToken = async () => {
@@ -80,8 +94,17 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
     }
     useEffect(() => {
-        validateToken()
-    }, [])
+        if (status === 'authenticated'){
+            dispatch({ type:'[AUTH] - Login', payload: data?.user as IUser})
+        }
+    }, [status, data])
+
+
+    // useEffect(() => {
+    //     validateToken()
+    // }, [])
+
+
     return (
         <AuthContext.Provider value={{
             ...state,
