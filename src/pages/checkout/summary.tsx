@@ -1,6 +1,6 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import NextLink from 'next/link';
-import { Box, Button, Card, CardContent, Divider, Grid, Link, Typography } from '@mui/material'
+import { Box, Button, Card, CardContent, Chip, CircularProgress, Divider, Grid, Link, Typography } from '@mui/material'
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 
@@ -8,9 +8,12 @@ import { CartList, OrderSummary } from '@/components/cart'
 import { ShopLayout } from '@/components/layouts'
 import { CartContext } from '@/context';
 import { countries } from '@/utils';
+import { ButtonWithLoader } from '@/components/ui';
 
 const SummaryPage = () => {
-    const { shippingAddress, numberOfItems, createOrder } = useContext( CartContext )
+    const { shippingAddress, numberOfItems, createOrder, isLoaded } = useContext( CartContext );
+    const [isLoadingSubmit, setIsLoadingSubmit] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
     const router = useRouter()
 
 
@@ -18,7 +21,11 @@ const SummaryPage = () => {
         if ( !Cookies.get('firstName') ) {
             router.push('/checkout/address')
         }
-    },[])
+
+        if (isLoaded && numberOfItems < 1) {
+            router.push('/')
+        }
+    }, [isLoaded])
 
 
     if( !shippingAddress ){
@@ -28,7 +35,15 @@ const SummaryPage = () => {
     const { firstName, lastName, address, address2 = '', city, zipCode, country, phone } = shippingAddress;
 
     const onCreateOrder = async () => {
-        await createOrder()
+        setIsLoadingSubmit(true);
+        const { hasError, message } = await createOrder();
+        if( hasError ){
+            setErrorMessage(message);
+            setIsLoadingSubmit(false);
+            return
+        }
+        router.replace(`/orders/${ message }`)
+
     }
 
     return (
@@ -68,15 +83,15 @@ const SummaryPage = () => {
                             <OrderSummary />
 
                             <Box sx={{ mt: 3 }}>
-                                <Button 
-                                    color='secondary' 
-                                    className='circular-btn' 
-                                    fullWidth
-                                    onClick={onCreateOrder}
-                                >
-                                    Confirmar orden
-                                </Button>
+                                <ButtonWithLoader label='Confirmar orden' onClick={onCreateOrder} isLoading={ isLoadingSubmit } />
+                                <Chip
+                                    color='error'
+                                    label={errorMessage}
+                                    sx={{display: errorMessage.length >0  ?  'flex' : 'none', mt:2}}
+                                />
+
                             </Box>
+
                         </CardContent>
                     </Card>
                 </Grid>

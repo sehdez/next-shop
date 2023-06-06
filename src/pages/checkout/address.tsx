@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { Box, Button, FormControl, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, FormControl, Grid, MenuItem, Select, TextField, Typography } from '@mui/material';
 
 import { ShopLayout } from '@/components/layouts';
 import { countries } from '@/utils';
 import Cookies from 'js-cookie';
 import { CartContext } from '@/context';
+import { ButtonWithLoader } from '@/components/ui';
 
 type FormData = {
     firstName : string;
@@ -36,11 +37,13 @@ const AddressPage = () => {
     const { updateAddress } = useContext(CartContext)
 
     const [defaultCountry, setDefaultCountry] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
         defaultValues: getAddressFromCookies()
     });
     const onSubmit = ( data: FormData ) => {
+        setIsLoading(true);
         updateAddress(data)
         router.push('/checkout/summary')
     }
@@ -168,7 +171,7 @@ const AddressPage = () => {
                                 // helperText
                             >
                                 {countries.map(( country, index ) => (
-                                    <MenuItem key={ country.code + index } value={ country.code }>{ country.name }</MenuItem>
+                                    <MenuItem key={ country.code + index } value={ country.name }>{ country.name }</MenuItem>
 
                                 ))}
                             </TextField>
@@ -192,14 +195,7 @@ const AddressPage = () => {
                 </Grid>
 
                 <Box sx={{ mt: 5 }} display='flex' justifyContent='center'>
-                    <Button 
-                        type='submit'
-                        color='secondary' 
-                        className='circular-btn' 
-                        size='large'
-                    >
-                        Revisar Pedido
-                    </Button>
+                    <ButtonWithLoader label='Revisar Pedido' type='submit' isLoading={isLoading} />
                 </Box>
             </form>
         </ShopLayout>

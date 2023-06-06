@@ -1,14 +1,16 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material'
+import { Box, Card, CardContent, Divider, Grid, Typography } from '@mui/material'
 
 import { CartList, OrderSummary } from '@/components/cart'
 import { ShopLayout } from '@/components/layouts'
 import { CartContext } from '@/context';
+import { ButtonWithLoader } from '@/components/ui';
 
 const CartPage = () => {
     const { isLoaded, numberOfItems } = useContext(CartContext);
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect( ()=> {
         if( isLoaded && numberOfItems === 0 ){
@@ -36,14 +38,14 @@ const CartPage = () => {
                             {/* Order Summary */}
                             <OrderSummary />
                             <Box sx={{ mt: 3 }}>
-                                <Button 
-                                    color='secondary' 
-                                    className='circular-btn' 
-                                    fullWidth
-                                    onClick={() => router.push('/checkout/address')}
-                                >
-                                    Checkout 
-                                </Button>
+                                <ButtonWithLoader 
+                                    label='Checkout' 
+                                    onClick={() => {
+                                        setIsLoading(true)
+                                        router.push('/checkout/address')
+                                    }}
+                                    isLoading={isLoading }
+                                />
                             </Box>
                         </CardContent>
                     </Card>

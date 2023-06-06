@@ -21,6 +21,7 @@ export interface IOrderItem {
     size    : string;
     quantity: number;
     slug    : string;
+    image   : string;
     price   : number;
     gender  : string
 }

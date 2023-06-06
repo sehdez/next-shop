@@ -69,7 +69,7 @@ export const SideMenu = () => {
 
                     <ListItem button
                         sx={{ display: isLoggedIn ? 'flex' : 'none' }}
-                        onClick={() => navigateTo('/')}
+                        onClick={() => navigateTo('/orders/history')}
                     >
                         <ListItemIcon>
                             <ConfirmationNumberOutlined />

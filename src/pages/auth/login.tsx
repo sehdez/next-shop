@@ -9,6 +9,7 @@ import { Box, Button, Chip, CircularProgress, Divider, Grid, IconButton, Link, T
 import { AuthLayout } from "@/components/layouts"
 import { validations } from '@/utils';
 import { ErrorOutline, GitHub, Google, Image } from '@mui/icons-material';
+import { ButtonWithLoader } from '@/components/ui';
 
 type FormData = {
     email: string,
@@ -96,19 +97,7 @@ const LoginPage = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Button 
-                                type='submit'
-                                color='secondary' 
-                                disabled={ isLoading }
-                                className="circular-btn" 
-                                size='large' 
-                                fullWidth
-                            >
-                                { isLoading 
-                                    ? (<CircularProgress color="inherit" size={20} />) 
-                                    : ('Enviar')
-                                }
-                            </Button>
+                            <ButtonWithLoader label='Iniciar sesión' type='submit' isLoading={isLoading} />
                         </Grid>
 
                         <Grid item xs={12} justifyContent='end' display='flex'>
@@ -136,11 +125,15 @@ const LoginPage = () => {
                                 return(
                                     <Button
                                         key={ provider.id }
+                                        disabled={isLoading}
                                         variant='outlined'
                                         fullWidth
                                         color='primary'
                                         sx={{ mb:1, pt:1, pb:1 }}
-                                        onClick={ () => signIn(provider.id) }
+                                        onClick={ () => {
+                                            setIsLoading(true)
+                                            signIn(provider.id)
+                                        }}
                                     >
                                         
                                             {

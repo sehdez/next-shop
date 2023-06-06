@@ -5,6 +5,7 @@ import { ICartProduct, ShippingAddress } from '@/interfaces';
 import { CartContext, cartReducer } from './';
 import { shopApi } from '@/api';
 import { IOrder, IOrderItem } from '../../interfaces/order';
+import axios from 'axios';
 
 export interface CartState {
     isLoaded         : boolean;
@@ -124,7 +125,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         dispatch({ type: '[CART] - Update ShipingAddress', payload: address })
     }
 
-    const createOrder = async ()=> {
+    const createOrder = async (): Promise<{ hasError: boolean; message: string }>=> {
 
         if( !state.shippingAddress ) {
             throw new Error('No hay dirección de entrega');
@@ -140,11 +141,29 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
         }
 
         try {
-            const { data } = await shopApi.post('/orders', body)
+            const { data } = await shopApi.post<IOrder>('/orders', body)
 
-            console.log({data})
-        } catch (error) {
-            console.log(error)
+                
+            dispatch({ type:'[CART] - Order Complete' })
+            
+            return{
+                hasError: false,
+                message: data._id!
+            }
+            
+
+        } catch (error: any) {
+            console.log(error.response.data.message)
+            if( axios.isAxiosError(error) ){
+                return {
+                    hasError: true,
+                    message: error.response?.data?.message
+                }
+            }
+            return {
+                hasError: true,
+                message: 'Error no controlado, hable con el administrador'
+            }
         }
     }
 
