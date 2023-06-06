@@ -2,10 +2,21 @@ import { FC, useContext } from 'react';
 import { Grid, Typography } from '@mui/material'
 import { CartContext } from '@/context';
 import { currency } from '@/utils';
+import { IOrder } from '../../interfaces/order';
+
+interface Props{
+    orderFromBackend?: IOrder
+}
 
 
-export const OrderSummary: FC = () => {
-    const { numberOfItems, subtotal, taxRate, total } = useContext(CartContext)
+export const OrderSummary: FC<Props> = ({orderFromBackend}) => {
+    /**
+     * Este componente se utiliza para mostrar info del carrito de compras 
+     * y también para mostrar la info de una orden realizada
+     * así que cuando se mande la props orderFromBackend va a utilizar la info 
+     * de la orden de compra, de lo contrario va autilizar la info del carrito de compras
+     */
+    const { numberOfItems, subtotal, taxRate, total } = orderFromBackend ? orderFromBackend : useContext(CartContext)
     return (
         <Grid container>
             <Grid item xs={6}>

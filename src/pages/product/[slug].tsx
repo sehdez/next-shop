@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-import { Box, Button, Chip, Grid, Typography } from '@mui/material';
+import { Box, Button, Chip, CircularProgress, Grid, Typography } from '@mui/material';
 import 'react-slideshow-image/dist/styles.css'
 
 import { ShopLayout } from '@/components/layouts'
@@ -22,6 +22,7 @@ const ProductPage: NextPage<props> = ({ product }) => {
 
     const { addProductToCart, cart } = useContext(CartContext)
     const { push } = useRouter()
+    const [isLoading, setIsLoading] = useState(false);
     const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
         _id: product._id,
         description: product.description,
@@ -44,7 +45,7 @@ const ProductPage: NextPage<props> = ({ product }) => {
     }
     const onAddProduct = () => {
         if (!tempCartProduct.size) return;
-
+        setIsLoading(true)
         addProductToCart(tempCartProduct)
         push('/cart');
 
@@ -86,13 +87,18 @@ const ProductPage: NextPage<props> = ({ product }) => {
                             product.inStock > 0
                                 ? (
                                     <Button
-                                        color='secondary' className='circular-btn' fullWidth
+                                        color='secondary' 
+                                        disabled={isLoading}
+                                        className='circular-btn' 
+                                        fullWidth
                                         onClick={onAddProduct}
                                     >
                                         {
-                                            tempCartProduct.size
-                                                ? 'Agregar al carrito'
-                                                : 'Seleccionar una talla'
+                                            isLoading
+                                                ? (<CircularProgress color='inherit' size={20} />)
+                                                : tempCartProduct.size
+                                                    ? 'Agregar al carrito'
+                                                    : 'Seleccionar una talla'
                                         }
 
                                     </Button>
