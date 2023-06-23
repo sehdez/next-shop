@@ -1,6 +1,7 @@
 import Head from 'next/head'
-import { FC, PropsWithChildren } from 'react';
-import { Navbar, SideMenu } from '../ui';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { FullScreenLoading, Navbar, SideMenu } from '../ui';
+import { useRouter } from 'next/router';
 
 interface Props {
     title: string;
@@ -9,6 +10,23 @@ interface Props {
 }
 
 export const ShopLayout: FC<PropsWithChildren & Props> = ({ children, imageFullUrl, pageDescription, title }) => {
+    const [loading, setLoading] = useState(false);
+    const router = useRouter()
+
+    useEffect(() => {
+        const startLoading = () => setLoading(true);
+        const endLoading = () => setLoading(false);
+
+        router.events.on('routeChangeStart', startLoading);
+        router.events.on('routeChangeComplete', endLoading);
+        router.events.on('routeChangeError', endLoading);
+
+        return () => {
+            router.events.off('routeChangeStart', startLoading);
+            router.events.off('routeChangeComplete', endLoading);
+            router.events.off('routeChangeError', endLoading);
+        };
+    }, []);
     return (
         <>
             <Head>
@@ -21,7 +39,9 @@ export const ShopLayout: FC<PropsWithChildren & Props> = ({ children, imageFullU
                         <meta name='og:image' content={imageFullUrl} />
                     )
                 }
+                <link rel="icon" href="/icon.png" /> 
             </Head>
+            {loading && <FullScreenLoading />}
 
             <nav>
                 <Navbar />

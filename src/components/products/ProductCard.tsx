@@ -39,6 +39,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
 
                             <CircularProgress sx={{ display: isImageLoaded ? 'none' : 'block' }} />
                             <CardMedia
+                                sx={{ display: isImageLoaded ? 'block' : 'none' }}
                                 component='img'
                                 image={`${productImage}`}
                                 alt={product.title}

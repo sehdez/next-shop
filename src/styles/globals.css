@@ -46,3 +46,37 @@
 .fondoImg {
   background-image: url(/fondo.svg);
 }
+
+.rotatingImage {
+  width: 20vw;
+  height: 20vw;
+  background-image: url('/icon.png');
+  background-size: cover;
+  animation: rotateAnimation 8s infinite;
+  /* animation: fadeIn 4s infinite; */
+  
+}
+
+@keyframes rotateAnimation {
+  0% {
+    transform: rotate(10deg);
+    opacity: 0;
+  }
+  25% {
+    transform: rotate(0deg);
+    opacity: 0.10;
+  }
+
+  50%{
+    transform: rotate(-10deg);
+    opacity: 1;
+  }
+  75% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(10deg);
+    opacity: 1;
+  }
+}
