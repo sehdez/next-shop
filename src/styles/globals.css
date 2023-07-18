@@ -60,23 +60,38 @@
 @keyframes rotateAnimation {
   0% {
     transform: rotate(10deg);
-    opacity: 0;
+    /* opacity: 0; */
   }
   25% {
     transform: rotate(0deg);
-    opacity: 0.10;
+    /* opacity: 0.10; */
   }
 
   50%{
     transform: rotate(-10deg);
-    opacity: 1;
+    /* opacity: 1; */
   }
   75% {
     transform: rotate(0deg);
-    opacity: 1;
+    /* opacity: 1; */
   }
   100% {
     transform: rotate(10deg);
-    opacity: 1;
+    /* opacity: 1; */
   }
+}
+
+
+/* PARA QUE LAS TABLAS NO MUESTREN BORDE AL HACER CLICK */
+.MuiDataGrid-cell--textLeft .css-a2dfy0-MuiDataGrid-root  {
+  outline: none !important;
+}
+.MuiDataGrid-columnHeader{
+  outline: none !important;
+}
+.css-a2dfy0-MuiDataGrid-root .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell{
+  outline: none !important;
+}
+.css-a2dfy0-MuiDataGrid-root .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell:focus {
+  outline: none !important;
 }

@@ -3,7 +3,7 @@ import { useContext, useState } from 'react'
 import { AuthContext, UiContext } from '@/context'
 
 import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from '@mui/material'
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined } from '@mui/icons-material'
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
 
 
 export const SideMenu = () => {
@@ -136,6 +136,15 @@ export const SideMenu = () => {
                         <ListSubheader>Admin Panel</ListSubheader>
 
                         <ListItem button
+                            onClick={() => navigateTo('/admin')}
+                        >
+                            <ListItemIcon>
+                                <DashboardOutlined />
+                            </ListItemIcon>
+                            <ListItemText primary={'Dashboard'} />
+                        </ListItem>
+
+                        <ListItem button
                             onClick={() => navigateTo('/')}
                         >
                             <ListItemIcon>
@@ -144,7 +153,7 @@ export const SideMenu = () => {
                             <ListItemText primary={'Productos'} />
                         </ListItem>
                         <ListItem button
-                            onClick={() => navigateTo('/')}
+                            onClick={() => navigateTo('/admin/orders')}
                         >
                             <ListItemIcon>
                                 <ConfirmationNumberOutlined />
@@ -152,8 +161,9 @@ export const SideMenu = () => {
                             <ListItemText primary={'Ordenes'} />
                         </ListItem>
 
+
                         <ListItem button
-                            onClick={() => navigateTo('/')}
+                            onClick={() => navigateTo('/admin/users')}
                         >
                             <ListItemIcon>
                                 <AdminPanelSettings />

@@ -27,7 +27,7 @@ export const checkEmailPassword = async(email: string = '', pass: string = '') =
 
 // Esta función crea o verifica el usuario de OAuth
 export const oAuthDbUser = async ( oAuthEmail: string = '', oAuthName: string = '' ) => {
-    db.connect();
+    await db.connect();
     const user = await User.findOne({ email: oAuthEmail });
 
     if(user){

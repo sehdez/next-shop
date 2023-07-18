@@ -12,11 +12,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await db.connect()
     const product = await Product.findOne({ slug }).lean()
     if (!product) {
+        await db.disconnect();
         return res.status(404).json({ message: 'No se encontró el producto' })
 
     }
 
-    await db.disconnect()
+    await db.disconnect();
     switch (req.method) {
         case 'GET':
             return res.status(200).json(product)

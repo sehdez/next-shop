@@ -17,7 +17,6 @@ export const getOrderById = async ( id:string ):  Promise<IOrder | null> => {
     if( !order ){
         return null;
     }
-
     return JSON.parse(JSON.stringify( order ))
 
 }
