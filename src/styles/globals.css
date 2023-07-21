@@ -83,15 +83,22 @@
 
 
 /* PARA QUE LAS TABLAS NO MUESTREN BORDE AL HACER CLICK */
-.MuiDataGrid-cell--textLeft .css-a2dfy0-MuiDataGrid-root  {
+/* .MuiDataGrid-cell--textLeft .css-a2dfy0-MuiDataGrid-root  {
+  outline: none !important;
+} */
+
+.MuiDataGrid-cell{
   outline: none !important;
 }
-.MuiDataGrid-columnHeader{
+
+.MuiDataGrid-columnHeader {
   outline: none !important;
 }
-.css-a2dfy0-MuiDataGrid-root .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell{
+
+/* .css-a2dfy0-MuiDataGrid-root .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell{
   outline: none !important;
 }
+
 .css-a2dfy0-MuiDataGrid-root .MuiDataGrid-row:not(.MuiDataGrid-row--dynamicHeight)>.MuiDataGrid-cell:focus {
   outline: none !important;
-}
+} */

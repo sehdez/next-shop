@@ -1,13 +1,14 @@
-import React from 'react'
-import { AdminLayout } from '@/components/layouts'
 import { ConfirmationNumberOutlined, VisibilityOutlined } from '@mui/icons-material'
-import { Chip, Grid, IconButton } from '@mui/material'
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { GridColDef, GridRenderCellParams }     from '@mui/x-data-grid'
+import { Chip, IconButton }                         from '@mui/material'
+
 import useSWR from 'swr';
-import { IOrder } from '../../interfaces/order';
-import { FullScreenLoading } from '../../components/ui';
-import { IUser } from '@/interfaces'
-import { dateFns } from '@/utils'
+
+import { DataTable, FullScreenLoading } from '@/components/ui';
+import { AdminLayout } from '@/components/layouts'
+import { IOrder }      from '@/interfaces/order';
+import { IUser }       from '@/interfaces'
+import { dateFns }     from '@/utils'
 
 const OrderPage = () => {
 
@@ -68,15 +69,11 @@ const OrderPage = () => {
             subtitle='Mantenimiento de órdenes'
             icon={<ConfirmationNumberOutlined />}
         >
-            <Grid container className='fadeIn'>
-                <Grid item xs={12} sx={{ height: 850    , width: '100%' }}>
-                    <DataGrid
-                        rows={rows}
-                        columns={columns}
-                        pageSizeOptions={[25, 50, 100]}
-                    />
-                </Grid>
-            </Grid>
+            <DataTable
+                title=''
+                rows={rows}
+                columns={columns}
+            />
 
         </AdminLayout>   
     )

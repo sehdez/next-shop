@@ -1,47 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { AdminLayout } from '@/components/layouts'
-import {  PeopleOutlined } from '@mui/icons-material';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { Avatar, CardMedia, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import useSWR from 'swr';
-import { FullScreenLoading } from '@/components/ui';
-import { IUser } from '@/interfaces';
-import { shopApi } from '@/api';
+import React, { useEffect, useState }            from 'react'
+import { PeopleOutlined }                        from '@mui/icons-material';
+import { GridColDef, GridRenderCellParams }      from '@mui/x-data-grid'
+import { Avatar, FormControl, MenuItem, Select } from '@mui/material';
 
-const users = () => {
+import useSWR from 'swr';
+
+import { DataTable, FullScreenLoading } from '@/components/ui';
+import { IUser }                        from '@/interfaces';
+import { shopApi }                      from '@/api';
+import { AdminLayout }                  from '@/components/layouts'
+import { useWidthColumns } from '../../utils/useWidthColumns';
+
+const UserPage = () => {
 
     const { data, error, isLoading } = useSWR<IUser[]>('/api/admin/users');
-    const [columnWidths, setColumnWidths] = React.useState<any>([]);
     const [users, setUsers] = useState<IUser[]>([])
-    
+    const [ column1, column2 ] = useWidthColumns();
 
 
-// UseEffect para calcular el tamaño de las columnas
-    useEffect(() => {
-
-        const calculateColumnWidths = () => {
-            /**
-             * EL CONTENEDOR DE LA TABLA MIDE UN MÁXIMO DE 1440PX, Y HAY DOS COLUMNAS ESTÁTICAS DE 100PX MAS 60 PX DE PADDING
-             * EN ESTE CASO SÓLO SE HIZO EL CALCULO PARA 2 COLUMNAS QUE VAN A TENER EL 48% DEL CONTENEDOR - LAS 2 CULUMNAS
-             */
-            const screenWidth = window.innerWidth > 1500 ? 1140 :  window.innerWidth -360 ;
-            const columnWidths = [
-                screenWidth * 0.47,
-                screenWidth * 0.47,
-            ];
-            setColumnWidths(columnWidths);
-        };
-
-        calculateColumnWidths();
-
-        // Agrega un event listener para recalcular los anchos cuando cambie el tamaño de la ventana
-        window.addEventListener('resize', calculateColumnWidths);
-
-        // Limpia el event listener cuando el componente se desmonte
-        return () => {
-            window.removeEventListener('resize', calculateColumnWidths);
-        };
-    }, []);
 
     useEffect(()=> {
         if(data){
@@ -72,8 +48,8 @@ const users = () => {
                 )
             }
         },
-        { field: 'name', headerName: 'Nombre Completo', width: columnWidths[0], maxWidth:588, minWidth: 200 },
-        { field: 'email', headerName: 'Correo', width: columnWidths[1], maxWidth: 588, minWidth: 200 },
+        { field: 'name', headerName: 'Nombre Completo', width: column1, maxWidth:588, minWidth: 200 },
+        { field: 'email', headerName: 'Correo', width: column2, maxWidth: 588, minWidth: 200 },
         {
             field: 'role',
             headerName: 'Rol',
@@ -132,17 +108,13 @@ const users = () => {
         subtitle='Mantenimiento de usuarios'
         icon={<PeopleOutlined color='primary'/>}
     >
-          <Grid container className='fadeIn'>
-              <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
-                  <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSizeOptions={[25, 50, 100]}
-                  />
-              </Grid>
-          </Grid>
+        <DataTable
+            title=''
+            columns={columns}
+            rows={rows}
+        />
     </AdminLayout>
   )
 }
 
-export default users
+export default UserPage
