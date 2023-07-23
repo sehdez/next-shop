@@ -40,11 +40,12 @@ const CartPage = () => {
                             <Box sx={{ mt: 3 }}>
                                 <ButtonWithLoader 
                                     label='Checkout' 
+                                    fullWidth
+                                    isLoading={isLoading }
                                     onClick={() => {
                                         setIsLoading(true)
                                         router.push('/checkout/address')
                                     }}
-                                    isLoading={isLoading }
                                 />
                             </Box>
                         </CardContent>

@@ -11,6 +11,7 @@ import { dbOrders } from '@/database';
 import { IOrder } from '@/interfaces';
 import { shopApi } from '@/api';
 import { useState } from 'react';
+import { AlertSnackbar } from '@/components/ui';
 
 interface Props {
     order: IOrder
@@ -31,10 +32,19 @@ const OrderPage: NextPage<Props> = ({ order }) => {
 
     const router = useRouter()
     const [isPaying, setIsPaying] = useState(false)
+    const [alertSnack, setAlertSnack] = useState({
+        open: false,
+        message: '',
+        severity: 'success',
+    });
     const { shippingAddress } = order;
     const onOrderCompleted = async (details: OrderResponseBody ) => {
         if( details.status !== 'COMPLETED' ){
-            return alert('No hay pago en Paypal');
+            return setAlertSnack({
+                open: true,
+                message: 'No hay pago en paypal',
+                severity: 'error',
+            });
         }
         setIsPaying(true);
 
@@ -46,7 +56,11 @@ const OrderPage: NextPage<Props> = ({ order }) => {
             router.reload()
         } catch (error) {
             console.log(error);
-            alert('error')
+            setAlertSnack({
+                open: true,
+                message: 'Ocurrió un error',
+                severity: 'error',
+            })
             setIsPaying(true);
 
         }
@@ -55,6 +69,10 @@ const OrderPage: NextPage<Props> = ({ order }) => {
     return (
         <ShopLayout title='Resumen de la orden' pageDescription={'Resumen de la órden'}>
             <Typography variant='h1' component='h1'>Orden: { order._id }</Typography>
+            <AlertSnackbar
+                alertSnackbar={alertSnack}
+                setAlertSnackbar={setAlertSnack}
+            />
 
             {
                 order.isPaid 
@@ -133,7 +151,6 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                                                 onApprove={(data, actions) => {
                                                     return actions.order!.capture().then((details) => {
                                                         onOrderCompleted(details as OrderResponseBody)
-                                                        console.log({details})
                                                         // const name = details?.payer?.name?.given_name;
                                                         
                                                     });

@@ -195,7 +195,7 @@ const AddressPage = () => {
                 </Grid>
 
                 <Box sx={{ mt: 5 }} display='flex' justifyContent='center'>
-                    <ButtonWithLoader label='Revisar Pedido' type='submit' isLoading={isLoading} />
+                    <ButtonWithLoader label='Revisar Pedido' type='submit' isLoading={isLoading} fullWidth />
                 </Box>
             </form>
         </ShopLayout>

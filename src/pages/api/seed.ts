@@ -15,10 +15,12 @@ export default async function handler(
         if (process.env.NODE_ENV === 'production') {
             return res.status(401).json({ message: 'No tienes acceso a este servicio' })
         }
+
+        const newProducts = seedDatabase.initialData.products.map( (product, index) => { return {...product, slug: `${ product.slug }-${ index }` } }  )
         await db.connect();
         
         await Product.deleteMany();
-        await Product.insertMany(seedDatabase.initialData.products);
+        await Product.insertMany(newProducts);
 
         await User.deleteMany();
         await User.insertMany( seedDatabase.initialData.users );

@@ -22,7 +22,6 @@ export const DataTable: FC<Props> = ( { title, rows, columns, rowHeight=52 } ) =
                         rows={ rows }
                         columns={columns}
                         pageSizeOptions={[25, 50, 100]}
-                        autoPageSize
                         localeText={esES.components.MuiDataGrid.defaultProps.localeText }
                         hideFooterSelectedRowCount
                     />

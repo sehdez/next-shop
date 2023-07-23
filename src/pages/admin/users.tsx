@@ -5,7 +5,7 @@ import { Avatar, FormControl, MenuItem, Select } from '@mui/material';
 
 import useSWR from 'swr';
 
-import { DataTable, FullScreenLoading } from '@/components/ui';
+import { AlertSnackbar, DataTable, FullScreenLoading } from '@/components/ui';
 import { IUser }                        from '@/interfaces';
 import { shopApi }                      from '@/api';
 import { AdminLayout }                  from '@/components/layouts'
@@ -16,7 +16,11 @@ const UserPage = () => {
     const { data, error, isLoading } = useSWR<IUser[]>('/api/admin/users');
     const [users, setUsers] = useState<IUser[]>([])
     const [ column1, column2 ] = useWidthColumns();
-
+    const [alertSnack, setAlertSnack] = useState({
+        open: false,
+        message: '',
+        severity: 'success',
+    });
 
 
     useEffect(()=> {
@@ -59,14 +63,13 @@ const UserPage = () => {
                 return (
                     <FormControl variant='standard' sx={{ minWidth:'150px' }}>
                         <Select
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
+                            disabled={ row.email === 'sergio@gmail.com' }
                             value={ row.role }
                             label='Rol'
                             sx={{ width:'100%', border: 'none' }}
                             className='fadeIn pointer-events'
                             onChange={ (e) => onRoleUpdated( row.id, e.target.value) }
-                            >
+                        >
                             <MenuItem className='custom-data-grid' value='admin' >Administrador</MenuItem>
                             <MenuItem className='custom-data-grid' value='client' >Cliente</MenuItem>
                         </Select>
@@ -93,10 +96,19 @@ const UserPage = () => {
         setUsers(updatedUsers)
         try{
             await shopApi.put('/admin/users', { userId, role: newRole });
-        }catch(error){
+            setAlertSnack({
+                open: true,
+                message: 'Se actualizó el Rol del usuario',
+                severity: 'success',
+            })
+        }catch(error: any){
             setUsers(previousUsers)
             console.log(error);
-            alert('No se pudo actualizar el rol de usuario')
+            setAlertSnack({
+                open: true,
+                message: error?.response?.data?.msg || 'No se pudo actualizar el rol de usuario',
+                severity: 'error',
+            })
 
         }
     }
@@ -108,6 +120,10 @@ const UserPage = () => {
         subtitle='Mantenimiento de usuarios'
         icon={<PeopleOutlined color='primary'/>}
     >
+        <AlertSnackbar 
+              alertSnackbar={alertSnack}
+              setAlertSnackbar={setAlertSnack }
+        />
         <DataTable
             title=''
             columns={columns}

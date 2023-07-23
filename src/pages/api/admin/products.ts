@@ -41,7 +41,7 @@ const getUsers =  async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
 }
 const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const { _id, images = [] } = req.body as IProduct;
+    const { _id, images = [], slug } = req.body as IProduct;
 
     if (!isValidObjectId) {
         return res.status(400).json({msg:`${_id} no es un id válido`})
@@ -51,10 +51,14 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
         return res.status(400).json({ msg: 'Es necesario por lo menos 2 imágenes' })
     }
 
-    // TODO: posiblemente tendremos un localhost:3000/productos/...
-
     try {
         await db.connect()
+        const productSlug = await Product.findOne({ slug });
+        if (productSlug) {
+            await db.disconnect();
+            return res.status(400).json({ msg: 'Ya existe el Slug: ' + slug })
+        }
+
         const productEdit = await Product.findById(_id);
 
         if(!productEdit){

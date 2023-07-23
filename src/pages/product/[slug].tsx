@@ -11,6 +11,7 @@ import { dbProducts } from '@/database';
 import { ISize } from '../../interfaces/products';
 import { CartContext } from '../../context/cart/CartContext';
 import { useRouter } from 'next/router';
+import { ButtonWithLoader } from '../../components/ui/ButtonWithLoader';
 
 // const product = initialData.products[0];
 
@@ -86,22 +87,13 @@ const ProductPage: NextPage<props> = ({ product }) => {
                         {
                             product.inStock > 0
                                 ? (
-                                    <Button
+                                    <ButtonWithLoader
+                                        label={ tempCartProduct.size ? 'Agregar al carrito' : 'Seleccionar una talla' }
                                         color='secondary' 
-                                        disabled={isLoading}
-                                        className='circular-btn' 
+                                        isLoading={isLoading}
                                         fullWidth
                                         onClick={onAddProduct}
-                                    >
-                                        {
-                                            isLoading
-                                                ? (<CircularProgress color='inherit' size={20} />)
-                                                : tempCartProduct.size
-                                                    ? 'Agregar al carrito'
-                                                    : 'Seleccionar una talla'
-                                        }
-
-                                    </Button>
+                                    />
                                 )
                                 : (<Chip label='No hay disponibles' color='error' variant='outlined' />)
                         }

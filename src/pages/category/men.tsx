@@ -1,14 +1,12 @@
-import { ShopLayout } from '@/components/layouts';
-import { ProductList } from '@/components/products';
-import { Typography } from '@mui/material';
-import { useProducts } from '../../hooks/useProducts';
-import { FullScreenLoading } from '../../components/ui/';
+import { ShopLayout }  from '@/components/layouts';
+import { Typography }  from '@mui/material';
+import { useProducts } from '@/hooks/useProducts';
+import { FullScreenLoading, InfinityScroll } from '@/components/ui';
 
 const MenPage = () => {
-    const { isError, isLoading, products } = useProducts('/products?gender=men');
+    const { isError, isLoading, products, noMoreData, fetchData  } = useProducts('/products?gender=men');
 
-    if (isError) return <div>failed to load</div>
-    // if (isLoading) return <div>loading...</div>
+    if (isError) return (<FullScreenLoading />)
 
     return (
         <ShopLayout
@@ -17,16 +15,16 @@ const MenPage = () => {
         >
             <Typography variant='h1' component='h1' >Hombres</Typography>
             <Typography variant='h2' sx={{ mb: 1 }} >Productos para hombres</Typography>
-            {
-                isLoading
-                    ? <FullScreenLoading />
-                    : <ProductList products={products} />
-            }
-
+            
+            <InfinityScroll
+                fetchData={fetchData}
+                hasMore={!noMoreData}
+                isLoading={isLoading}
+                products={products}
+            />
 
         </ShopLayout>
     )
 }
-
 
 export default MenPage

@@ -1,15 +1,16 @@
 import { ShopLayout } from '@/components/layouts';
-import { ProductList } from '@/components/products';
 import { Typography } from '@mui/material';
 import { useProducts } from '../hooks/useProducts';
-import { FullScreenLoading } from '../components/ui/';
+import { FullScreenLoading, InfinityScroll } from '@/components/ui/';
 
 const HomePage = () => {
 
-    const { isError, isLoading, products } = useProducts('/products');
+    const { isError, isLoading, products, noMoreData, fetchData } = useProducts('/products');
 
-    if (isError) return <div>failed to load</div>
-    // if (isLoading) return <div>loading...</div>
+    if (isError){
+        return (<FullScreenLoading />)
+    }
+    
 
     return (
         <ShopLayout
@@ -18,11 +19,13 @@ const HomePage = () => {
         >
             <Typography variant='h1' component='h1' >Tienda</Typography>
             <Typography variant='h2' sx={{ mb: 1 }} >Todos los productos</Typography>
-            {
-                isLoading
-                    ? <FullScreenLoading />
-                    : <ProductList products={products} />
-            }
+            
+            <InfinityScroll 
+                fetchData={fetchData}
+                hasMore={!noMoreData}
+                isLoading={isLoading}
+                products={products}
+            />
 
 
         </ShopLayout>
