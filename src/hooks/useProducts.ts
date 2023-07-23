@@ -16,15 +16,15 @@ interface FetchProducts{
 
 export const useProducts = (url: string, config: SWRConfiguration = {}) => {
 
-    const [data, setData] = useState<IProduct[]>([]);
-    const [error, setError] = useState(false)
+    const [data, setData]               = useState<IProduct[]>([]);
+    const [error, setError]             = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
-    const [loading, setLoading] = useState(false);
-    const [noMoreData, setNoMoreData] = useState(false)
+    const [loading, setLoading]         = useState(false);
+    const [noMoreData, setNoMoreData]   = useState(false)
 
 
     const fetchData = async () => {
-        if(noMoreData) return;
+        if (noMoreData) return;
         try {
             const { data } = await shopApi<IProduct[]>(`${url}${url.includes('?') ? '&' : '?'}page=${currentPage}&limit=12`);
             setData((prevData) => [...prevData, ...data]);
@@ -37,24 +37,9 @@ export const useProducts = (url: string, config: SWRConfiguration = {}) => {
         }
     };
 
-    // const handleScroll = () => {
-    //     const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    //     if (scrollHeight - (scrollTop + clientHeight) > 500 && scrollHeight - (scrollTop + clientHeight) < 700 &&!loading) {
-    //         setCurrentPage((prevPage) => prevPage + 1); // Incrementar la página actual
-    //     }
-    // };
-
     useEffect(() => {
         fetchData();
     }, []);
-
-    // useEffect(() => {
-    //     window.addEventListener('scroll', handleScroll);
-    //     return () => window.removeEventListener('scroll', handleScroll);
-    // }, []);
-
-
-
 
 
     return {

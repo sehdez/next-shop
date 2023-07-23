@@ -7,11 +7,11 @@ type Data =
     | { message: string }
     | IProduct[]
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 
     switch (req.method) {
         case 'GET':
-            return getProducts(req, res);
+            return await getProducts(req, res);
 
         default:
             return res.status(400).json({ message: 'Bad request' });
@@ -32,18 +32,25 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     if (gender !== 'all') {
         condition = { gender };
     }
-    await db.connect()
-        
+    try{
+        await db.connect()
 
-    const products = await Product.find(condition)
-        .select('title images price inStock slug -_id')
-        .skip(pageNumber * limitNumber - limitNumber)
-        .limit(limitNumber)
-        .lean(); // lean es para traer menos información
 
-    await db.disconnect()
+        const products = await Product.find(condition)
+            .select('title images price inStock slug -_id')
+            .skip(pageNumber * limitNumber - limitNumber)
+            .limit(limitNumber)
+            .lean(); // lean es para traer menos información
 
-    return res.json(products);
+        // await db.disconnect()
+
+        return res.json(products);
+    }catch(error){
+        console.log(error)
+        await db.disconnect()
+        return res.status(500).json({message:'Error del servidor'})
+    }
+    
 
 
 }

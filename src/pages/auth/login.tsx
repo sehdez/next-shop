@@ -97,7 +97,7 @@ const LoginPage = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <ButtonWithLoader label='Iniciar sesión' type='submit' isLoading={isLoading} />
+                            <ButtonWithLoader fullWidth label='Iniciar sesión' type='submit' isLoading={isLoading} />
                         </Grid>
 
                         <Grid item xs={12} justifyContent='end' display='flex'>
