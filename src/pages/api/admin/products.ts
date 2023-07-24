@@ -54,18 +54,20 @@ const updateProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
     try {
         await db.connect()
         const productSlug = await Product.findOne({ slug });
-        if (productSlug) {
-            await db.disconnect();
-            return res.status(400).json({ msg: 'Ya existe el Slug: ' + slug })
-        }
-
         const productEdit = await Product.findById(_id);
+
+        
 
         if(!productEdit){
             await db.disconnect();
             return res.status(400).json({ msg: 'No existe un producto con el id: ' + _id })
         }
-        
+
+        if (`${productSlug?._id}` !== `${productEdit?._id}`) {
+            await db.disconnect();
+            return res.status(400).json({ msg: `El slug: '${slug}' ya existe en otro producto` })
+        }
+
         productEdit.images.forEach( async( image ) =>  {
             if(!images.includes(image) && image.includes('https') ) {
                 // https://res.cloudinary.com/sehdez1/image/upload/v1689897706/i2sxwyscximpdmxvlupz.jpg

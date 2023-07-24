@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 
 export const useWidthColumns = () :number[] => {
-    const [columnWidths, setColumnWidths] = useState<number[]>([]);
+    const [columnWidths, setColumnWidths] = useState<number[]>([0,0]);
     // UseEffect para calcular el tamaño de las columnas
     useEffect(() => {
 

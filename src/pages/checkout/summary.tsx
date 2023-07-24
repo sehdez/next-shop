@@ -83,7 +83,7 @@ const SummaryPage = () => {
                             <OrderSummary />
 
                             <Box sx={{ mt: 3 }}>
-                                <ButtonWithLoader label='Confirmar orden' onClick={onCreateOrder} isLoading={ isLoadingSubmit } />
+                                <ButtonWithLoader label='Confirmar orden' onClick={onCreateOrder} isLoading={ isLoadingSubmit } fullWidth />
                                 <Chip
                                     color='error'
                                     label={errorMessage}

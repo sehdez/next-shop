@@ -21,7 +21,7 @@ export const AlertSnackbar: FC<Props> = ({ alertSnackbar, setAlertSnackbar }) =>
             autoHideDuration={6000}
             onClose={handleClose}
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            sx={{ mt: 5 }}
+            sx={{ mt: 7 }}
         >
             <Alert onClose={handleClose} severity={ alertSnackbar.severity as any } sx={{ width: '100%' }} >
                 { alertSnackbar.message }
